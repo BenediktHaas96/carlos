@@ -8,9 +8,6 @@ inputs:
     description: Deploy token that will be used to access the remote repository
   remote-composefile:
     description: Path to the Composefile(s) from the remote repository which should be downloaded
-  
-outputs:
-
 
 runs:
 
