@@ -7,3 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-environment
+        with:
+          remote-repository: BenediktHaas96/testing
+          remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
+          remote-composefile: "myfolder/myfile.yml"

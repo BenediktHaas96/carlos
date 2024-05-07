@@ -20,5 +20,6 @@ runs:
         ssh-key: ${{ inputs.remote-deploytoken }}
         sparse-checkout: ${{ inputs.remote-composefile }}
         sparse-checkout-cone-mode: false
+        path: ./deploy-env
     - run: echo "Hello there!"
       shell: bash
