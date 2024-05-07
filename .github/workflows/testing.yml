@@ -9,5 +9,5 @@ jobs:
       - uses: ./.github/actions/deploy-environment
         with:
           remote-repository: BenediktHaas96/testing
-          remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
+          remote-deploytoken: ${{ secrets.SSH_WRONGKEY }}
           remote-composefile: "myfolder/myfile.yml"
