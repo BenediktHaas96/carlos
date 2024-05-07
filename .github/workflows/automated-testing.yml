@@ -1,5 +1,5 @@
 name: automated-testing
-on: push
+on: [] #push
 jobs:
   generate-scenario-job-matrix:
     runs-on: self-hosted

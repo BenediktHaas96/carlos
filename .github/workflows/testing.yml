@@ -1,0 +1,9 @@
+name: testing-workflow
+on: push
+jobs:
+  testjob:
+    runs-on: [self-hosted, i2100038]
+    name: testjob
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/deploy-environment

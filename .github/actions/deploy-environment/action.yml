@@ -1,0 +1,27 @@
+name: 'deploy-environment'
+description: 'Uses Docker Compose with a pre-made or custom Composefile to deploy an environment for later steps'
+
+inputs:
+  remote-repository:
+    description: Optional GitHub repository containing Composefiles ( org1/repo1 => https://github.com/org1/repo1 )
+  remote-deploytoken:
+    description: Deploy token that will be used to access the remote repository
+  remote-composefile:
+    description: Path to the Composefile(s) from the remote repository which should be downloaded
+  
+outputs:
+
+
+runs:
+
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+      if: ${{ inputs.remote-repository != '' }}
+      with:
+        repository: ${{ inputs.remote-repository }}
+        ssh-key: ${{ inputs.remote-deploytoken }}
+        sparse-checkout: ${{ inputs.remote-composefile }}
+        sparse-checkout-cone-mode: false
+    - run: echo "Hello there!"
+      shell: bash
