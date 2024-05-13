@@ -2,24 +2,43 @@ name: 'deploy-environment'
 description: 'Uses Docker Compose with a pre-made or custom Composefile to deploy an environment for later steps'
 
 inputs:
+  composefile-path:
+    description: Path to Composefile that will be used directly or via merge with a remote file for the deployment
+    required: true
   remote-repository:
     description: Optional GitHub repository containing Composefiles ( org1/repo1 => https://github.com/org1/repo1 )
   remote-deploytoken:
     description: Deploy token that will be used to access the remote repository
   remote-composefile:
     description: Path to the Composefile(s) from the remote repository which should be downloaded
+  remote-path:
+    description: Path relative to working directory where the files will be placed
+    default: ./deploy-env
 
 runs:
 
   using: 'composite'
   steps:
-    - uses: actions/checkout@v4
+    - name: Checkout remote
+      uses: actions/checkout@v4
       if: ${{ inputs.remote-repository != '' }}
       with:
         repository: ${{ inputs.remote-repository }}
         ssh-key: ${{ inputs.remote-deploytoken }}
         sparse-checkout: ${{ inputs.remote-composefile }}
         sparse-checkout-cone-mode: false
-        path: ./deploy-env
-    - run: echo "Hello there!"
+        path: ${{ inputs.remote-path }}
+    - name: Render Composefile
       shell: bash
+      run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
+      env:
+        RENDERCOMPOSE_OUTFILE: ${{ inputs.composefile-path }}
+    - name: Deploy services
+      id: deploy-services
+      shell: bash
+      run: docker compose -f ${{ inputs.remote-composefile }} up
+    - name: Upload rendered Composefile
+      uses: actions/upload-artifact@v4
+      with:
+        name: rendered-composefile
+        path: ${{ inputs.composefile-path }}
