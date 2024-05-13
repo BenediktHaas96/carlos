@@ -13,7 +13,6 @@ inputs:
     description: Path to the Composefile(s) from the remote repository which should be downloaded
   remote-path:
     description: Path relative to working directory where the files will be placed
-    default: ./deploy-env
 
 runs:
 
@@ -30,7 +29,7 @@ runs:
         path: ${{ inputs.remote-path }}
     - name: Render Composefile
       shell: bash
-      run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
+      run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-path }}${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
       env:
         RENDERCOMPOSE_OUTFILE: ${{ inputs.composefile-path }}
     # - name: Deploy services

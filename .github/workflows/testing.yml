@@ -12,6 +12,7 @@ jobs:
           remote-repository: BenediktHaas96/testing
           remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
           remote-composefile: "myfolder/myfile.yml"
+          remote-path: ./deploy-env
       - uses: actions/download-artifact@v4
         with:
           name: rendered-composefile
