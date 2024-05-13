@@ -4,6 +4,7 @@ services:
     image: otherimage
     environment:
       - joe=mama
+      - testing=somemore
 
   b:
     image: myimg
