@@ -8,6 +8,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-environment
         with:
+          composefile-path: temp-composefile.yml
           remote-repository: BenediktHaas96/testing
-          remote-deploytoken: ${{ secrets.SSH_WRONGKEY }}
+          remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
           remote-composefile: "myfolder/myfile.yml"
+      - uses: actions/download-artifact@v4
+        with:
+          name: rendered-composefile
+      - shell: bash
+        run: cat temp-composefile.yml

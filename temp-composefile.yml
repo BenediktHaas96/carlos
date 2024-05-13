@@ -1,0 +1,9 @@
+name: tempcompose
+services:
+  a:
+    image: otherimage
+    environment:
+      - joe=mama
+
+  b:
+    image: myimg
