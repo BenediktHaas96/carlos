@@ -3,5 +3,5 @@ services:
   carla-simulator:
     environment:
       DISPLAY: $DISPLAY
-    image: rwthika/carla-simulator:server
+    image: gitlab.ika.rwth-aachen.de:5050/autotech/workshops/munich/carla-compose-workshop/simulation.carla.carla:carla-0.9.14-ika #rwthika/carla-simulator:server
     command: bash -ic './CarlaUE4.sh -nosound'
