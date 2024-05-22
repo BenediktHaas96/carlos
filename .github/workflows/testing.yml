@@ -6,6 +6,9 @@ jobs:
     name: deploy environment
     steps:
       - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+              xhost +local:
       - uses: ./.github/actions/deploy-environment
         with:
           composefile-path: temp-composefile.yml
@@ -66,3 +69,4 @@ jobs:
         run: |
               docker compose -f temp-composefile.yml kill
               docker compose -f temp-composefile.yml down
+              xhost -local:
