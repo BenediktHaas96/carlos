@@ -58,7 +58,7 @@ jobs:
           docker-network: tempcompose_default
 
   destroy-environment:
-    needs: deploy-environment
+    needs: run-scenarios
     if: ${{ always() && !cancelled() }}
     runs-on: [self-hosted, i2100038]
     name: destroy environment
