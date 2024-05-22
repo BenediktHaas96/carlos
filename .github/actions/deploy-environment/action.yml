@@ -39,4 +39,4 @@ runs:
     - name: Deploy services
       id: deploy-services
       shell: bash
-      run: docker compose -f ${{ inputs.remote-composefile }} up -d
+      run: docker compose -f ${{ inputs.composefile-path }} up -d
