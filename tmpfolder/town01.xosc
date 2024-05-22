@@ -14,11 +14,11 @@
 
     <ScenarioObject name="ego_vehicle">
 
-      <CatalogReference catalogName="VehicleCatalog" entryName="vehicle.tesla.model3"/> 
+      <CatalogReference catalogName="VehicleCatalog" entryName="vehicle.mercedes.coupe"/> 
     </ScenarioObject>
 
     <ScenarioObject name="challenger_vehicle_1">
-      <CatalogReference catalogName="VehicleCatalog" entryName="vehicle.volkswagen.t2"/> 
+      <CatalogReference catalogName="VehicleCatalog" entryName="vehicle.lincoln.mkz_2017"/> 
     </ScenarioObject>
 
     <ScenarioObject name="challenger_vehicle_2">
@@ -26,7 +26,7 @@
     </ScenarioObject>
 
     <ScenarioObject name="stopping_vehicle_3">
-      <CatalogReference catalogName="VehicleCatalog" entryName="vehicle.volkswagen.t2"/> 
+      <CatalogReference catalogName="VehicleCatalog" entryName="vehicle.tesla.model3"/> 
     </ScenarioObject>
 
   </Entities>
