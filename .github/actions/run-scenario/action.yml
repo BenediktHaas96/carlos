@@ -5,42 +5,38 @@ inputs:
   scenario-runner-image:
     description: 'Image of the CARLA scenario runner'
     default: rwthika/carla-scenario-runner:latest
-
   scenario-folder-path:
     description: 'Path to folder containing the scenario(s) and optional catalogs subfolder'
     required: true
-
   scenario-file-name:
     description: 'Filename of scenario'
     required: true
-
   carla-hostname:
     description: 'Hostname of CARLA simulator that the scenario runner should connect to'
     required: true
-
   docker-network:
     description: 'Docker network that the scenario runner should attach to'
     default: 'default'
 
-  runs:
+runs:
 
-    using: 'composite'
-    steps:
-      - name: Populate Composefile
-        shell: bash
-        run: docker compose -f ${GITHUB_ACTION_PATH}/files/template.yml config -o ${GITHUB_ACTION_PATH}/files/run-scenario.yml
-        env:
-          SCENARIO_RUNNER_IMAGE: ${{ inputs.scenario-runner-image }}
-          SCENARIO_DIR: ${{ inputs.scenario-folder-path }}
-          SCENARIO_FILE_NAME: ${{ inputs.scenario-file-name }}
-          CARLA_HOSTNAME: ${{ inputs.carla-hostname }}
-          DOCKER_SIMNETWORK: ${{ inputs.docker-network }}
-      - name: Run Scenario
-        shell: bash
-        run: docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml up
-      - name: Cleanup
-        if: ${{ always() }}
-        shell: bash
-        run: |
-              docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml kill
-              docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml down
+  using: 'composite'
+  steps:
+    - name: Populate Composefile
+      shell: bash
+      run: docker compose -f ${GITHUB_ACTION_PATH}/files/template.yml config -o ${GITHUB_ACTION_PATH}/files/run-scenario.yml
+      env:
+        SCENARIO_RUNNER_IMAGE: ${{ inputs.scenario-runner-image }}
+        SCENARIO_DIR: ${{ inputs.scenario-folder-path }}
+        SCENARIO_FILE_NAME: ${{ inputs.scenario-file-name }}
+        CARLA_HOSTNAME: ${{ inputs.carla-hostname }}
+        DOCKER_SIMNETWORK: ${{ inputs.docker-network }}
+    - name: Run Scenario
+      shell: bash
+      run: docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml up
+    - name: Cleanup
+      if: ${{ always() }}
+      shell: bash
+      run: |
+            docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml kill
+            docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml down

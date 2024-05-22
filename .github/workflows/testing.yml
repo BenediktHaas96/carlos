@@ -58,7 +58,6 @@ jobs:
           docker-network: tempcompose_default
 
   destroy-environment:
-    needs: run-scenarios
     runs-on: [self-hosted, i2100038]
     name: destroy environment
     steps:
