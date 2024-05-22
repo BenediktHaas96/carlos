@@ -4,7 +4,6 @@ description: 'Uses Docker Compose with a pre-made or custom Composefile to deplo
 inputs:
   composefile-path:
     description: Path to Composefile that will be used directly or via merge with a remote file for the deployment
-    required: true
   remote-repository:
     description: Optional GitHub repository containing Composefiles ( org1/repo1 => https://github.com/org1/repo1 )
   remote-deploytoken:
@@ -32,12 +31,12 @@ runs:
       run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-path }}${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
       env:
         RENDERCOMPOSE_OUTFILE: ${{ inputs.composefile-path }}
-    # - name: Deploy services
-    #   id: deploy-services
-    #   shell: bash
-    #   run: docker compose -f ${{ inputs.remote-composefile }} up
     - name: Upload rendered Composefile
       uses: actions/upload-artifact@v4
       with:
         name: rendered-composefile
         path: ${{ inputs.composefile-path }}
+    - name: Deploy services
+      id: deploy-services
+      shell: bash
+      run: docker compose -f ${{ inputs.remote-composefile }} up -d
