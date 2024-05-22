@@ -1,10 +1,6 @@
 name: tempcompose
 services:
-  a:
-    image: otherimage
+  carla-simulator:
     environment:
-      - joe=mama
-      - testing=somemore
-
-  b:
-    image: myimg
+      DISPLAY: $DISPLAY
+    image: rwthika/carla-simulator:server
