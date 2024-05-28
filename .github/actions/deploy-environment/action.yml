@@ -33,11 +33,11 @@ runs:
       env:
         RENDERCOMPOSE_OUTFILE: ${{ inputs.rendered-composefile }}
       run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-path }}${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
-    - name: Upload rendered Composefile
-      uses: actions/upload-artifact@v4
-      with:
-        name: rendered-composefile
-        path: ${{ inputs.rendered-composefile }}
+    # - name: Upload rendered Composefile
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: rendered-composefile
+    #     path: ${{ inputs.rendered-composefile }}
     - name: Deploy services
       id: deploy-services
       shell: bash
