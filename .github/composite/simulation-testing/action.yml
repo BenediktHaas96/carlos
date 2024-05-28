@@ -36,13 +36,13 @@ runs:
     - name: Deploy simulation environment
       uses: ./.github/actions/deploy-environment
       env:
-        RENDERCOMPOSE_OUTFILE: ${GITHUB_ACTION_PATH}/rendered-composefile.yml
+        RENDERCOMPOSE_OUTFILE: ./rendered-composefile.yml
       with:
         composefile-path: ${{ inputs.composefile-path }}
         remote-repository: ${{ inputs.remote-repository }}
         remote-deploytoken: ${{ inputs.remote-deploytoken }}
         remote-composefile: ${{ inputs.remote-composefile }}
-        remote-path: ${GITHUB_ACTION_PATH}/rendercompose-remote/
+        remote-path: ./rendercompose-remote/
     - name: Run scenario
       uses: ./.github/actions/run-scenario
       with:
@@ -54,5 +54,5 @@ runs:
       shell: bash
       if: ${{ always() }}
       run: |
-            docker compose -f ${GITHUB_ACTION_PATH}/rendered-composefile.yml kill
-            docker compose -f ${GITHUB_ACTION_PATH}/rendered-composefile.yml down
+            docker compose -f ./rendered-composefile.yml kill
+            docker compose -f ./rendered-composefile.yml down
