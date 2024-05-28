@@ -12,9 +12,9 @@ inputs:
     description: Deploy token that will be used to access the remote repository
   remote-composefile:
     description: Path to the Composefile(s) from the remote repository which should be downloaded
-  startup-delay:
-    description: Time to wait before scenarios should run so environment can start up properly
-    default: 5000
+  startup-delaysecs:
+    description: Seconds to wait before scenarios should run so environment can start up properly
+    default: '5'
   # Scenario exec
   scenario-runner-image:
     description: 'Image of the CARLA scenario runner'
@@ -47,7 +47,7 @@ runs:
         rendered-composefile: ./rendered-composefile.yml
     - name: Wait for environment startup
       shell: bash
-      run: sleep ${{ inputs.startup-delay }}
+      run: sleep ${{ inputs.startup-delaysecs }}s
     - name: Run scenario
       uses: ./.github/actions/run-scenario
       with:
