@@ -1,0 +1,58 @@
+name: 'simulation-testing'
+description: 'Deploys a customizable, dockerized simulation environment to execute and evaluate OpenSCENARIO files'
+
+inputs:
+  # Env deploy
+  composefile-path:
+    description: Path to Composefile that will be used directly or via merge with a remote file for the deployment
+    required: true
+  remote-repository:
+    description: Optional GitHub repository containing Composefiles ( org1/repo1 => https://github.com/org1/repo1 )
+  remote-deploytoken:
+    description: Deploy token that will be used to access the remote repository
+  remote-composefile:
+    description: Path to the Composefile(s) from the remote repository which should be downloaded
+  # Scenario exec
+  scenario-runner-image:
+    description: 'Image of the CARLA scenario runner'
+    default: 'rwthika/carla-scenario-runner:latest'
+  scenario-folder-path:
+    description: 'Path to folder containing the scenario(s) and optional catalogs subfolder'
+    required: true
+  scenario-file-name:
+    description: 'Filename of scenario'
+    required: true
+  carla-hostname:
+    description: 'Hostname of CARLA simulator that the scenario runner should connect to'
+    default: 'carla-simulator'
+  docker-network:
+    description: 'Docker network that the scenario runner should attach to'
+    default: 'simtest_default'
+
+runs:
+
+  using: 'composite'
+  steps:
+    - name: Deploy simulation environment
+      uses: ./.github/actions/deploy-environment
+      env:
+        RENDERCOMPOSE_OUTFILE: ${GITHUB_ACTION_PATH}/rendered-composefile.yml
+      with:
+        composefile-path: ${{ inputs.composefile-path }}
+        remote-repository: ${{ inputs.remote-repository }}
+        remote-deploytoken: ${{ inputs.remote-deploytoken }}
+        remote-composefile: ${{ inputs.remote-composefile }}
+        remote-path: ${GITHUB_ACTION_PATH}/rendercompose-remote
+    - name: Run scenario
+      uses: ./.github/actions/run-scenario
+      with:
+        scenario-folder-path: ${{ inputs.scenario-folder-path }}
+        scenario-file-name: ${{ inputs.scenario-file-name }}
+        carla-hostname: ${{ inputs.carla-hostname }}
+        docker-network: ${{ inputs.docker-network }}
+    - name: Destroy simulation environment
+      shell: bash
+      if: ${{ always() }}
+      run: |
+            docker compose -f ${GITHUB_ACTION_PATH}/rendered-composefile.yml kill
+            docker compose -f ${GITHUB_ACTION_PATH}/rendered-composefile.yml down

@@ -1,41 +1,30 @@
 name: testing-workflow
 on: push
 jobs:
-  deploy-environment:
-    runs-on: [self-hosted, i2100038]
-    name: deploy environment
-    steps:
-      - uses: actions/checkout@v4
-      - shell: bash
-        run: |
-              xhost +local:
-      - uses: ./.github/actions/deploy-environment
-        with:
-          composefile-path: temp-composefile.yml
-          remote-repository: BenediktHaas96/testing
-          remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
-          remote-composefile: "myfolder/myfile.yml"
-          remote-path: ./deploy-env/
-
-  # check-rendered-composefile:
-  #   needs: deploy-environment
+  # deploy-environment:
   #   runs-on: [self-hosted, i2100038]
-  #   name: check rendered composefile
+  #   name: deploy environment
   #   steps:
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: rendered-composefile
+  #     - uses: actions/checkout@v4
   #     - shell: bash
-  #       run: cat temp-composefile.yml
+  #       run: |
+  #             xhost +local:
+  #     - uses: ./.github/actions/deploy-environment
+  #       with:
+  #         composefile-path: temp-composefile.yml
+  #         remote-repository: BenediktHaas96/testing
+  #         remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
+  #         remote-composefile: "myfolder/myfile.yml"
+  #         remote-path: ./deploy-env/
   
   generate-scenario-job-matrix:
-    # needs: check-rendered-composefile
-    needs: deploy-environment
+    # needs: deploy-environment
     runs-on: [self-hosted, i2100038]
-    name: generate scenario job matrix
+    name: Generate scenario job matrix
     outputs:
       matrix: ${{ steps.generate.outputs.matrix }}
     steps:
+      - uses: actions/checkout@v4
       - id: generate
         uses: ./.github/actions/generate-job-matrix
         with:
@@ -43,32 +32,57 @@ jobs:
           query-string: '*.xosc'
           exclude-string: '*/catalogs/*'
 
-  run-scenarios:
+  simulation-scenario-tests:
     needs: generate-scenario-job-matrix
     runs-on: [self-hosted, i2100038]
-    name: Run ${{ matrix.filename }}
+    name: Evaluate ${{ matrix.filename }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-scenario-job-matrix.outputs.matrix) }}
     steps:
-      - uses: ./.github/actions/run-scenario
+      - shell: bash
+        run: |
+              xhost +local:
+      - uses: ./.github/composite/simulation-testing
         with:
+          composefile-path: temp-composefile.yml
+          remote-repository: BenediktHaas96/testing
+          remote-deploytoken: ${{ secrets.SSH_PRIVKEY }}
+          remote-composefile: "myfolder/myfile.yml"
           scenario-folder-path: ${{ matrix.filedir }}
           scenario-file-name: ${{ matrix.filename }}
           carla-hostname: carla-simulator
           docker-network: tempcompose_default
-
-  destroy-environment:
-    needs: run-scenarios
-    if: ${{ always() && !cancelled() }}
-    runs-on: [self-hosted, i2100038]
-    name: destroy environment
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: rendered-composefile
       - shell: bash
         run: |
-              docker compose -f temp-composefile.yml kill
-              docker compose -f temp-composefile.yml down
               xhost -local:
+
+  # run-scenarios:
+  #   needs: generate-scenario-job-matrix
+  #   runs-on: [self-hosted, i2100038]
+  #   name: Run ${{ matrix.filename }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix: ${{ fromJson(needs.generate-scenario-job-matrix.outputs.matrix) }}
+  #   steps:
+  #     - uses: ./.github/actions/run-scenario
+  #       with:
+  #         scenario-folder-path: ${{ matrix.filedir }}
+  #         scenario-file-name: ${{ matrix.filename }}
+  #         carla-hostname: carla-simulator
+  #         docker-network: tempcompose_default
+
+  # destroy-environment:
+  #   needs: run-scenarios
+  #   if: ${{ always() && !cancelled() }}
+  #   runs-on: [self-hosted, i2100038]
+  #   name: destroy environment
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: rendered-composefile
+  #     - shell: bash
+  #       run: |
+  #             docker compose -f temp-composefile.yml kill
+  #             docker compose -f temp-composefile.yml down
+  #             xhost -local:
