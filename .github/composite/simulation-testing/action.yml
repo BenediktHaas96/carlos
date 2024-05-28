@@ -42,7 +42,7 @@ runs:
         remote-repository: ${{ inputs.remote-repository }}
         remote-deploytoken: ${{ inputs.remote-deploytoken }}
         remote-composefile: ${{ inputs.remote-composefile }}
-        remote-path: ${GITHUB_ACTION_PATH}/rendercompose-remote
+        remote-path: ${GITHUB_ACTION_PATH}/rendercompose-remote/
     - name: Run scenario
       uses: ./.github/actions/run-scenario
       with:
