@@ -17,19 +17,20 @@ jobs:
           remote-composefile: "myfolder/myfile.yml"
           remote-path: ./deploy-env/
 
-  check-rendered-composefile:
-    needs: deploy-environment
-    runs-on: [self-hosted, i2100038]
-    name: check rendered composefile
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: rendered-composefile
-      - shell: bash
-        run: cat temp-composefile.yml
+  # check-rendered-composefile:
+  #   needs: deploy-environment
+  #   runs-on: [self-hosted, i2100038]
+  #   name: check rendered composefile
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: rendered-composefile
+  #     - shell: bash
+  #       run: cat temp-composefile.yml
   
   generate-scenario-job-matrix:
-    needs: check-rendered-composefile
+    # needs: check-rendered-composefile
+    needs: deploy-environment
     runs-on: [self-hosted, i2100038]
     name: generate scenario job matrix
     outputs:
