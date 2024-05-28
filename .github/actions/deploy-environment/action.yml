@@ -12,6 +12,8 @@ inputs:
     description: Path to the Composefile(s) from the remote repository which should be downloaded
   remote-path:
     description: Path relative to working directory where the files will be placed
+  rendered-composefile:
+    description: Path where the rendered Composefile should be placed
 
 runs:
 
@@ -28,13 +30,15 @@ runs:
         path: ${{ inputs.remote-path }}
     - name: Render Composefile
       shell: bash
+      env:
+        RENDERCOMPOSE_OUTFILE: ${{ inputs.rendered-composefile }}
       run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-path }}${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
     - name: Upload rendered Composefile
       uses: actions/upload-artifact@v4
       with:
         name: rendered-composefile
-        path: ${{ inputs.composefile-path }}
+        path: ${{ inputs.rendered-composefile }}
     - name: Deploy services
       id: deploy-services
       shell: bash
-      run: docker compose -f ${{ inputs.composefile-path }} up -d
+      run: docker compose -f ${{ inputs.rendered-composefile }} up -d

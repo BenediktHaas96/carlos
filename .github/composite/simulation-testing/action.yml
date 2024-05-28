@@ -38,14 +38,13 @@ runs:
   steps:
     - name: Deploy simulation environment
       uses: ./.github/actions/deploy-environment
-      env:
-        RENDERCOMPOSE_OUTFILE: ./rendered-composefile.yml
       with:
         composefile-path: ${{ inputs.composefile-path }}
         remote-repository: ${{ inputs.remote-repository }}
         remote-deploytoken: ${{ inputs.remote-deploytoken }}
         remote-composefile: ${{ inputs.remote-composefile }}
         remote-path: ./rendercompose-remote/
+        rendered-composefile: ./rendered-composefile.yml
     - name: Wait for environment startup
       shell: bash
       run: sleep ${{ inputs.startup-delay }}
