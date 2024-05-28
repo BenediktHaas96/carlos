@@ -43,7 +43,7 @@ jobs:
       - shell: bash
         run: |
               xhost +local:
-      - uses: ./.github/composite/simulation-testing
+      - uses: BenediktHaas96/carlos-simulation-test@v0.1.0 #./.github/composite/simulation-testing
         with:
           composefile-path: temp-composefile.yml
           remote-repository: BenediktHaas96/testing
