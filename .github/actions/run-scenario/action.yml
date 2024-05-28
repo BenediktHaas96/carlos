@@ -33,7 +33,7 @@ runs:
         DOCKER_SIMNETWORK: ${{ inputs.docker-network }}
     - name: Run Scenario
       shell: bash
-      run: docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml up
+      run: docker compose -f ${GITHUB_ACTION_PATH}/files/run-scenario.yml run --rm
     - name: Cleanup
       if: ${{ always() }}
       shell: bash
