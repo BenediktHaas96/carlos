@@ -29,8 +29,6 @@ runs:
     - name: Render Composefile
       shell: bash
       run: ${GITHUB_ACTION_PATH}/scripts/render-composefile.sh ${{ inputs.remote-path }}${{ inputs.remote-composefile }} ${{ inputs.composefile-path }}
-      env:
-        RENDERCOMPOSE_OUTFILE: ${{ inputs.composefile-path }}
     - name: Upload rendered Composefile
       uses: actions/upload-artifact@v4
       with:
